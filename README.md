@@ -2,7 +2,7 @@
 
 This is just a test repo to try [drone](http://docs.drone.io/) with python.
 
-# Drone local installation
+## Drone local installation
 
 First we need to install [docker-compose](https://docs.docker.com/compose/):
 
@@ -17,7 +17,7 @@ First we need to install [docker-compose](https://docs.docker.com/compose/):
 To run a Dockerized Drone, we follow [this instructions](http://docs.drone.io/installation/).
 
 Mainly, we define a `docker-compose`:
-```bash
+```yaml
 version: '2'
 
 services:
@@ -74,5 +74,21 @@ Finally, we start drone:
 Heading to the ngrok provided url we can connect the github repos we want.
 That's it, for those selected repos any pull request, push or tag will trigger a call to drone's webhooks thus
 starting a run.
+
+
+## Repository configuration
+
+The repository to be connected to `drone` needs a `.drone.yml` file specifying the pipeline configuration,
+as an example:
+```yaml
+pipeline:
+  build:
+    image: python:3.6.1-alpine
+    commands:
+      - pip install -r requirements.txt
+      - pip install -r test-requirements.txt
+      - pytest .
+
+```
 
 
