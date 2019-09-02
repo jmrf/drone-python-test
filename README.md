@@ -55,6 +55,43 @@ volumes:
   drone-server-data:
 ```
 
+Alternatively you can also start them individually:
+
+### drone server
+```bash
+docker run \
+  --volume=/var/lib/drone:/data \
+  --env=DRONE_AGENTS_ENABLED=true \
+  --env=DRONE_GITHUB_SERVER=https://github.com \
+  --env=DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID} \
+  --env=DRONE_GITHUB_CLIENT_SECRET=${DRONE_GITHUB_CLIENT_ID} \
+  --env=DRONE_RPC_SECRET=${DRONE_RPC_SECRET} \
+  --env=DRONE_SERVER_HOST=${DRONE_SERVER_HOST} \
+  --env=DRONE_SERVER_PROTO=${DRONE_SERVER_PROTO} \
+  --publish=80:80 \
+  --publish=443:443 \
+  --restart=always \
+  --detach=true \
+  --name=drone \
+  drone/drone:1
+```
+
+### drone runner
+```bash
+docker run -d \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e DRONE_RPC_PROTO=https \
+  -e DRONE_RPC_HOST=https://e7f2bb11.ngrok.io \
+  -e DRONE_RPC_SECRET=${DRONE_RPC_SECRET} \
+  -e DRONE_RUNNER_CAPACITY=2 \
+  -e DRONE_RUNNER_NAME=${HOSTNAME} \
+  -p 3000:3000 \
+  --restart always \
+  --name runner \
+  drone/agent:1
+```
+
+
 To run `drone` locally we will also need [ngrok](https://ngrok.com/) to expose the needed url and ports
 ```bash
     ngrok http 80

@@ -1,2 +1,6 @@
 .cache/
+.vscode/
 __pycache__/
+.hypothesis/
+
+*.pyc
